@@ -1,0 +1,4455 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Server to ksp usage",
+    "contact": {
+      "name": "Udalov A.S.",
+      "email": "Udalov.A.Se@sberbank.ru"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "//localhost:8081/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "API for Объектов эксплуатации",
+      "description": "Operation Object Controller"
+    },
+    {
+      "name": "API Истории событий",
+      "description": "Event History Controller"
+    },
+    {
+      "name": "API Событий",
+      "description": "Check Event Controller"
+    },
+    {
+      "name": "API Содержания событий",
+      "description": "Event Content Controller"
+    },
+    {
+      "name": "API Чеклистов",
+      "description": "Check List Controller"
+    },
+    {
+      "name": "API актов приема передачи",
+      "description": "Act Receiving Transfer Controller"
+    },
+    {
+      "name": "API для взаимодействия с ППРБ.'Профиль сотрудника'",
+      "description": "Employee Controller"
+    },
+    {
+      "name": "API для работы с вложениями",
+      "description": "Attachment Controller"
+    },
+    {
+      "name": "АПИ работы с проверками чеклистов СМ",
+      "description": "Check Controller"
+    },
+    {
+      "name": "Контроллер только для демонстраций/ при появлении контура ИФТ в удаление!!!",
+      "description": "Check Controller Impl"
+    }
+  ],
+  "paths": {
+    "/": {
+      "post": {
+        "tags": [
+          "API for Объектов эксплуатации"
+        ],
+        "summary": "Создание(если не передан ид) или обновление списка типов объекта",
+        "operationId": "addOrupdateObjectTypesUsingPOST",
+        "requestBody": {
+          "description": "record",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/OperationObjectDto"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "record"
+      }
+    },
+    "/aksp/check/": {
+      "get": {
+        "tags": [
+          "Контроллер только для демонстраций/ при появлении контура ИФТ в удаление!!!"
+        ],
+        "summary": "execute",
+        "operationId": "executeUsingGET",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/acts": {
+      "post": {
+        "tags": [
+          "API актов приема передачи"
+        ],
+        "summary": "Загрузить акт приема передачи",
+        "operationId": "uploadUsingPOST",
+        "requestBody": {
+          "description": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActReceivingTransferDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "dto"
+      }
+    },
+    "/v1/acts/{orderId}": {
+      "get": {
+        "tags": [
+          "API актов приема передачи"
+        ],
+        "summary": "Получить акт по orderId",
+        "operationId": "getActByOrderIdUsingGET",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "orderId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActReceivingTransferDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/attachments": {
+      "post": {
+        "tags": [
+          "API для работы с вложениями"
+        ],
+        "summary": "Загрузка вложений",
+        "operationId": "uploadFilesUsingPOST",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "entityName": {
+                    "type": "string"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "file",
+                      "format": "binary"
+                    }
+                  },
+                  "entityId": {
+                    "type": "string"
+                  },
+                  "rootEntityId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResult«List«AttachmentDto»»"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/attachments/short": {
+      "get": {
+        "tags": [
+          "API для работы с вложениями"
+        ],
+        "summary": "Получить короткую информацию по вложениям",
+        "operationId": "getAttachmentsByEntityIdAndNameUsingGET",
+        "parameters": [
+          {
+            "name": "entityId",
+            "in": "query",
+            "description": "entityId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entityName",
+            "in": "query",
+            "description": "entityName",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CHECK_LIST"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Модель короткой информации по вложениям"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/attachments/zip-download/{entityId}": {
+      "get": {
+        "tags": [
+          "API для работы с вложениями"
+        ],
+        "summary": "Получить вложения по идентификатору сущности",
+        "operationId": "zipDownloadUsingGET",
+        "parameters": [
+          {
+            "name": "entityId",
+            "in": "path",
+            "description": "entityId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/zip": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/attachments/{fileId}": {
+      "get": {
+        "tags": [
+          "API для работы с вложениями"
+        ],
+        "summary": "Получение вложений по идентификатору",
+        "operationId": "downloadAttachmentUsingGET",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "description": "fileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "midget",
+            "in": "query",
+            "description": "midget",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "API для работы с вложениями"
+        ],
+        "summary": "Удаление вложений по идентификатору",
+        "operationId": "deleteAttachmentUsingDELETE",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "description": "fileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/check-event": {
+      "get": {
+        "tags": [
+          "API Событий"
+        ],
+        "summary": "Получить список событий",
+        "operationId": "getPageableUsingGET",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "size",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "description": "sortDirection",
+            "schema": {
+              "type": "string",
+              "default": "DESC",
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page«CheckEventDto»"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "API Событий"
+        ],
+        "summary": "Загружает событие",
+        "operationId": "uploadUsingPOST_1",
+        "requestBody": {
+          "description": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckEventDtoReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckEventDtoRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "dto"
+      }
+    },
+    "/v1/check-event/status/{eventId}": {
+      "put": {
+        "tags": [
+          "API Событий"
+        ],
+        "summary": "Обновить статус события",
+        "operationId": "updateStatusUsingPUT",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "eventId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "status",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DONE",
+                "NEW",
+                "WORK"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckEventDtoRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/check-event/{id}": {
+      "get": {
+        "tags": [
+          "API Событий"
+        ],
+        "summary": "Получить событие по идентификатору",
+        "operationId": "getTaskServiceByIdUsingGET",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckEventDtoRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/checklists": {
+      "get": {
+        "tags": [
+          "API Чеклистов"
+        ],
+        "summary": "Получение пагинированного списка чеклистов",
+        "operationId": "getCheckListsPagedUsingGET",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "size",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "description": "sortDirection",
+            "schema": {
+              "type": "string",
+              "default": "DESC",
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page«CheckListDto»"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "API Чеклистов"
+        ],
+        "summary": "Обновление чеклиста",
+        "operationId": "updateCheckListUsingPUT",
+        "requestBody": {
+          "description": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckListDtoReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckListDtoRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "dto"
+      },
+      "post": {
+        "tags": [
+          "API Чеклистов"
+        ],
+        "summary": "Создание чеклиста",
+        "operationId": "createOrUpdateCheckListUsingPOST",
+        "requestBody": {
+          "description": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckListDtoReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckListDtoRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "dto"
+      }
+    },
+    "/v1/checklists/active": {
+      "get": {
+        "tags": [
+          "API Чеклистов"
+        ],
+        "summary": "Получение пагинированного только активных",
+        "operationId": "getActiveCheckListsPagedUsingGET",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "size",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "description": "sortDirection",
+            "schema": {
+              "type": "string",
+              "default": "DESC",
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page«CheckListDto»"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/checklists/{checkListId}": {
+      "get": {
+        "tags": [
+          "API Чеклистов"
+        ],
+        "summary": "Получение чеклиста по идентификатору",
+        "operationId": "getCheckListByIdUsingGET",
+        "parameters": [
+          {
+            "name": "checkListId",
+            "in": "path",
+            "description": "checkListId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckListDtoRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "API Чеклистов"
+        ],
+        "summary": "Обновление статуса чеклиста",
+        "operationId": "updateCheckListStatusUsingPOST",
+        "parameters": [
+          {
+            "name": "checkListId",
+            "in": "path",
+            "description": "checkListId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "status",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ACTIVE",
+                "ARCHIVE",
+                "NEW"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckListDtoRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/checks": {
+      "put": {
+        "tags": [
+          "АПИ работы с проверками чеклистов СМ"
+        ],
+        "summary": "Обновление проверки в статусе \"запланирована\"",
+        "operationId": "updateInStatusScheduledUsingPUT",
+        "requestBody": {
+          "description": "checkDto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckDtoReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckDtoRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "checkDto"
+      },
+      "post": {
+        "tags": [
+          "АПИ работы с проверками чеклистов СМ"
+        ],
+        "summary": "Создать проверку",
+        "operationId": "createUsingPOST",
+        "requestBody": {
+          "description": "checkDto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckDtoReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckDtoRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "checkDto"
+      }
+    },
+    "/v1/checks/checklist/{checkListId}": {
+      "get": {
+        "tags": [
+          "АПИ работы с проверками чеклистов СМ"
+        ],
+        "summary": "Получает чеклист (этот метод кэшируется на беке)",
+        "operationId": "getCheckListDtoCachedForCheckUsingGET",
+        "parameters": [
+          {
+            "name": "checkListId",
+            "in": "path",
+            "description": "checkListId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckListDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/checks/{checkId}": {
+      "get": {
+        "tags": [
+          "АПИ работы с проверками чеклистов СМ"
+        ],
+        "summary": "Получить экземпляр проверки по идентификатору",
+        "operationId": "getByIdUsingGET",
+        "parameters": [
+          {
+            "name": "checkId",
+            "in": "path",
+            "description": "checkId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckDtoRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "АПИ работы с проверками чеклистов СМ"
+        ],
+        "summary": "Обновляет значения полей в проверке",
+        "operationId": "updateCheckFieldsUsingPUT",
+        "parameters": [
+          {
+            "name": "checkId",
+            "in": "path",
+            "description": "checkId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "fields",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CheckFieldDto"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckDtoRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "fields"
+      }
+    },
+    "/v1/checks/{checkId}/comment": {
+      "put": {
+        "tags": [
+          "АПИ работы с проверками чеклистов СМ"
+        ],
+        "summary": "Добавляет комментарий к пункту проверки",
+        "operationId": "commentItemUsingPUT",
+        "parameters": [
+          {
+            "name": "checkId",
+            "in": "path",
+            "description": "checkId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckItemDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckDtoRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "dto"
+      }
+    },
+    "/v1/checks/{checkId}/complete": {
+      "post": {
+        "tags": [
+          "АПИ работы с проверками чеклистов СМ"
+        ],
+        "summary": "Переводит статус проверки на \"Завершена\"",
+        "operationId": "changeStatusToCompleteUsingPOST",
+        "parameters": [
+          {
+            "name": "checkId",
+            "in": "path",
+            "description": "checkId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckDtoRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/checks/{checkId}/in_progress": {
+      "post": {
+        "tags": [
+          "АПИ работы с проверками чеклистов СМ"
+        ],
+        "summary": "Переводит статус проверки на \"В работе\"",
+        "operationId": "changeStatusToInProgressUsingPOST",
+        "parameters": [
+          {
+            "name": "checkId",
+            "in": "path",
+            "description": "checkId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckDtoRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/employees/position/{positionId}": {
+      "get": {
+        "tags": [
+          "API для взаимодействия с ППРБ.'Профиль сотрудника'"
+        ],
+        "summary": "Получение данных должности по идентификатору",
+        "operationId": "getPositionByIdUsingGET",
+        "parameters": [
+          {
+            "name": "positionId",
+            "in": "path",
+            "description": "positionId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonRpcResponse«PositionDto,ResultError»"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/employees/profile": {
+      "get": {
+        "tags": [
+          "API для взаимодействия с ППРБ.'Профиль сотрудника'"
+        ],
+        "summary": "Получение полного профиля сотрудника по одному из идентификаторов",
+        "operationId": "getEmployeeProfileUsingGET",
+        "parameters": [
+          {
+            "name": "businessId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "employeeId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "organizationId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spasLogin",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ucpId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "wrkNumber",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonRpcResponse«List«EmployeeProfileDto»,ResultError»"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/employees/search": {
+      "post": {
+        "tags": [
+          "API для взаимодействия с ППРБ.'Профиль сотрудника'"
+        ],
+        "summary": "Поиск сотрудников в ППРБ.ПС по параметрам",
+        "operationId": "searchEmployeesUsingPOST",
+        "requestBody": {
+          "description": "params",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchEmployeeParams"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonRpcResponse«List«EmployeeAssignmentDto»,ResultError»"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "params"
+      }
+    },
+    "/v1/employees/subdivision/{subdivisionId}": {
+      "get": {
+        "tags": [
+          "API для взаимодействия с ППРБ.'Профиль сотрудника'"
+        ],
+        "summary": "Получение подразделения по идентификатору",
+        "operationId": "getSubdivisionByIdUsingGET",
+        "parameters": [
+          {
+            "name": "subdivisionId",
+            "in": "path",
+            "description": "subdivisionId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonRpcResponse«SubdivisionDto,ResultError»"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/employees/{employeeId}/communications": {
+      "get": {
+        "tags": [
+          "API для взаимодействия с ППРБ.'Профиль сотрудника'"
+        ],
+        "summary": "Получение списка коммуникаций по идентификатору сотрудника",
+        "operationId": "getCommunicationsByEmployeeIdUsingGET",
+        "parameters": [
+          {
+            "name": "employeeId",
+            "in": "path",
+            "description": "employeeId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonRpcResponse«List«CommunicationDto»,ResultError»"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/event-content": {
+      "post": {
+        "tags": [
+          "API Содержания событий"
+        ],
+        "summary": "Загружает запись содержания события",
+        "operationId": "uploadUsingPOST_2",
+        "requestBody": {
+          "description": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventContentDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventContentDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "dto"
+      }
+    },
+    "/v1/event-content/by/event/{eventId}": {
+      "get": {
+        "tags": [
+          "API Содержания событий"
+        ],
+        "summary": "Получить список по ИД события",
+        "operationId": "getByEventIdUsingGET",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "eventId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventContentDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/event-history": {
+      "get": {
+        "tags": [
+          "API Истории событий"
+        ],
+        "summary": "Получить список истории события",
+        "operationId": "getPageableUsingGET_1",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "size",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "description": "sortDirection",
+            "schema": {
+              "type": "string",
+              "default": "DESC",
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page«EventHistoryDto»"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "API Истории событий"
+        ],
+        "summary": "Обновляет запись истории события",
+        "operationId": "updateUsingPUT",
+        "requestBody": {
+          "description": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventHistoryDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventHistoryDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "dto"
+      },
+      "post": {
+        "tags": [
+          "API Истории событий"
+        ],
+        "summary": "Загружает запись истории события",
+        "operationId": "uploadUsingPOST_3",
+        "requestBody": {
+          "description": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventHistoryDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventHistoryDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ],
+        "x-codegen-request-body-name": "dto"
+      }
+    },
+    "/v1/event-history/by/event/{eventId}": {
+      "get": {
+        "tags": [
+          "API Истории событий"
+        ],
+        "summary": "Получить список истории событий по ид события",
+        "operationId": "getByEventIdUsingGET_1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "eventId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventHistoryDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/event-history/{id}": {
+      "get": {
+        "tags": [
+          "API Истории событий"
+        ],
+        "summary": "Получить запись историии события по идентификатору",
+        "operationId": "getByIdUsingGET_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventHistoryDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "SberPDI Header": [
+              "global"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ActReceivingTransferDto": {
+        "title": "ActReceivingTransferDto",
+        "type": "object",
+        "properties": {
+          "comment": {
+            "type": "string",
+            "description": "Комментарий"
+          },
+          "contractorEmail": {
+            "type": "string",
+            "description": "Эл. почта контактного лица"
+          },
+          "contractorName": {
+            "type": "string",
+            "description": "Контактное лицо"
+          },
+          "contractorPhone": {
+            "type": "string",
+            "description": "Телефон контактного лица"
+          },
+          "incidentId": {
+            "type": "string",
+            "description": "Номер сервисного обращения"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Прикладной ID объекта"
+          },
+          "orderId": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "description": "Номер акта приема передачи"
+          },
+          "orderStatus": {
+            "type": "integer",
+            "description": "Статус акта приема передачи",
+            "format": "int32"
+          },
+          "reasonReject": {
+            "type": "string",
+            "description": "Причина отказа"
+          },
+          "resolveTime": {
+            "type": "string",
+            "description": "Дата и время обработки",
+            "format": "date-time"
+          },
+          "technicalPlaceId": {
+            "type": "string",
+            "description": "Объект недвижимости"
+          },
+          "unit": {
+            "type": "string",
+            "description": "ЕИ"
+          },
+          "volume": {
+            "type": "string",
+            "description": "Объем выполненных работ"
+          }
+        },
+        "description": "Акт приема передачи"
+      },
+      "ApiError": {
+        "title": "ApiError",
+        "type": "object",
+        "properties": {
+          "applyTo": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "hints": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiResult«List«AttachmentDto»»": {
+        "title": "ApiResult«List«AttachmentDto»»",
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttachmentDto"
+            }
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "AttachmentDto": {
+        "title": "AttachmentDto",
+        "required": [
+          "entityId",
+          "entityName"
+        ],
+        "type": "object",
+        "properties": {
+          "createDate": {
+            "type": "string",
+            "description": "Дата-время создания записи",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Логин создавшего"
+          },
+          "entityId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "entityName": {
+            "type": "string",
+            "description": "Название класса сущности",
+            "enum": [
+              "CHECK_LIST"
+            ]
+          },
+          "filename": {
+            "type": "string",
+            "description": "Название файла"
+          },
+          "filetype": {
+            "type": "string",
+            "description": "Тип файла"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "rootEntityId": {
+            "type": "string",
+            "description": "ID корня агрегата"
+          },
+          "updateDate": {
+            "type": "string",
+            "description": "Дата-время обновления записи",
+            "format": "date-time"
+          },
+          "updatedBy": {
+            "type": "string",
+            "description": "Логин обновившего"
+          }
+        },
+        "description": "Модель данных с результатом сохранения вложения"
+      },
+      "CheckDtoReq": {
+        "title": "CheckDtoReq",
+        "required": [
+          "checkListId",
+          "checkobjId",
+          "eventId"
+        ],
+        "type": "object",
+        "properties": {
+          "checkDate": {
+            "type": "string",
+            "description": "Дата-время проверки",
+            "format": "date-time"
+          },
+          "checkDescription": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "Описание"
+          },
+          "checkItems": {
+            "type": "array",
+            "description": "Пункты проверки",
+            "items": {
+              "$ref": "#/components/schemas/CheckItemDto"
+            }
+          },
+          "checkListId": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "ID чеклиста"
+          },
+          "checkobjId": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "ID объекта проверки"
+          },
+          "eventId": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "ID события"
+          },
+          "name": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "Наименование"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          }
+        },
+        "description": "Проверка чеклистов СМ"
+      },
+      "CheckDtoRes": {
+        "title": "CheckDtoRes",
+        "required": [
+          "checkListId",
+          "checkobjId",
+          "eventId"
+        ],
+        "type": "object",
+        "properties": {
+          "checkDate": {
+            "type": "string",
+            "description": "Дата-время проверки",
+            "format": "date-time"
+          },
+          "checkDescription": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "Описание"
+          },
+          "checkItems": {
+            "type": "array",
+            "description": "Пункты проверки",
+            "items": {
+              "$ref": "#/components/schemas/CheckItemDto"
+            }
+          },
+          "checkListId": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "ID чеклиста"
+          },
+          "checkStatus": {
+            "type": "string",
+            "description": "Статус чеклиста",
+            "enum": [
+              "COMPLETED",
+              "IN_PROGRESS",
+              "SCHEDULED"
+            ]
+          },
+          "checkobjId": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "ID объекта проверки"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Дата-время создания записи",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Логин создавшего"
+          },
+          "eventId": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "ID события"
+          },
+          "name": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "Наименование"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "updateDate": {
+            "type": "string",
+            "description": "Дата-время обновления записи",
+            "format": "date-time"
+          },
+          "updatedBy": {
+            "type": "string",
+            "description": "Логин обновившего"
+          }
+        },
+        "description": "Проверка чеклистов СМ"
+      },
+      "CheckEventDtoReq": {
+        "title": "CheckEventDtoReq",
+        "type": "object",
+        "properties": {
+          "checkObjectId": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Идентификатор ОП"
+          },
+          "description": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string",
+            "description": "Описание"
+          },
+          "eventControlDate": {
+            "type": "string",
+            "description": "Контрольная дата события",
+            "format": "date-time"
+          },
+          "eventFactEnd": {
+            "type": "string",
+            "description": "Фактическая дата окончания",
+            "format": "date-time"
+          },
+          "eventFactStart": {
+            "type": "string",
+            "description": "Фактическая дата начала",
+            "format": "date-time"
+          },
+          "eventPlanEnd": {
+            "type": "string",
+            "description": "Запланированная дата окончания",
+            "format": "date-time"
+          },
+          "eventPlanStart": {
+            "type": "string",
+            "description": "Запланированная дата начала",
+            "format": "date-time"
+          },
+          "eventType": {
+            "type": "string",
+            "description": "Описание",
+            "enum": [
+              "CONTACT",
+              "NOTE",
+              "SERVICE"
+            ]
+          },
+          "managerId": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Идентификатор менеджера"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "rootCheckObjectId": {
+            "type": "string",
+            "description": "Корень ОП"
+          },
+          "status": {
+            "type": "string",
+            "description": "Статус",
+            "enum": [
+              "DONE",
+              "NEW",
+              "WORK"
+            ]
+          }
+        },
+        "description": "Модель данных события"
+      },
+      "CheckEventDtoRes": {
+        "title": "CheckEventDtoRes",
+        "type": "object",
+        "properties": {
+          "checkObjectId": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Идентификатор ОП"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Дата-время создания записи",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Логин создавшего"
+          },
+          "description": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string",
+            "description": "Описание"
+          },
+          "eventControlDate": {
+            "type": "string",
+            "description": "Контрольная дата события",
+            "format": "date-time"
+          },
+          "eventFactEnd": {
+            "type": "string",
+            "description": "Фактическая дата окончания",
+            "format": "date-time"
+          },
+          "eventFactStart": {
+            "type": "string",
+            "description": "Фактическая дата начала",
+            "format": "date-time"
+          },
+          "eventPlanEnd": {
+            "type": "string",
+            "description": "Запланированная дата окончания",
+            "format": "date-time"
+          },
+          "eventPlanStart": {
+            "type": "string",
+            "description": "Запланированная дата начала",
+            "format": "date-time"
+          },
+          "eventType": {
+            "type": "string",
+            "description": "Описание",
+            "enum": [
+              "CONTACT",
+              "NOTE",
+              "SERVICE"
+            ]
+          },
+          "managerId": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Идентификатор менеджера"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "rootCheckObjectId": {
+            "type": "string",
+            "description": "Корень ОП"
+          },
+          "status": {
+            "type": "string",
+            "description": "Статус",
+            "enum": [
+              "DONE",
+              "NEW",
+              "WORK"
+            ]
+          },
+          "updateDate": {
+            "type": "string",
+            "description": "Дата-время обновления записи",
+            "format": "date-time"
+          },
+          "updatedBy": {
+            "type": "string",
+            "description": "Логин обновившего"
+          }
+        },
+        "description": "Модель данных события"
+      },
+      "CheckFieldDto": {
+        "title": "CheckFieldDto",
+        "type": "object",
+        "properties": {
+          "checkListFieldId": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Идентификатор поля чеклиста"
+          },
+          "fieldValue": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "Значение поля проверки"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          }
+        },
+        "description": "Поле проверки"
+      },
+      "CheckItemDto": {
+        "title": "CheckItemDto",
+        "type": "object",
+        "properties": {
+          "checkFields": {
+            "type": "array",
+            "description": "Поля проверки",
+            "items": {
+              "$ref": "#/components/schemas/CheckFieldDto"
+            }
+          },
+          "checkListItemId": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Идентификатор пункта чеклиста"
+          },
+          "comment": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "Комментарий к пункту"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Активность пункта"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          }
+        },
+        "description": "Пункт проверки"
+      },
+      "CheckListAccessDto": {
+        "title": "CheckListAccessDto",
+        "required": [
+          "roleID"
+        ],
+        "type": "object",
+        "properties": {
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "roleID": {
+            "type": "string",
+            "description": "ID роли"
+          }
+        },
+        "description": "Модель для привязки ролей к чеклисту"
+      },
+      "CheckListAccessDtoReq": {
+        "title": "CheckListAccessDtoReq",
+        "required": [
+          "roleID"
+        ],
+        "type": "object",
+        "properties": {
+          "roleID": {
+            "type": "string",
+            "description": "ID роли"
+          }
+        },
+        "description": "Модель для привязки ролей к чеклисту"
+      },
+      "CheckListAccessDtoRes": {
+        "title": "CheckListAccessDtoRes",
+        "required": [
+          "roleID"
+        ],
+        "type": "object",
+        "properties": {
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "roleID": {
+            "type": "string",
+            "description": "ID роли"
+          }
+        },
+        "description": "Модель для привязки ролей к чеклисту"
+      },
+      "CheckListDto": {
+        "title": "CheckListDto",
+        "required": [
+          "checkListName"
+        ],
+        "type": "object",
+        "properties": {
+          "attachmentsFlag": {
+            "type": "boolean",
+            "description": "Возможность добавлять вложения"
+          },
+          "checkListAccessList": {
+            "type": "array",
+            "description": "Привязка ролей к чеклисту",
+            "items": {
+              "$ref": "#/components/schemas/CheckListAccessDto"
+            }
+          },
+          "checkListDescription": {
+            "type": "string",
+            "description": "Описание"
+          },
+          "checkListItems": {
+            "type": "array",
+            "description": "Пункты чеклиста",
+            "items": {
+              "$ref": "#/components/schemas/CheckListItemDto"
+            }
+          },
+          "checkListName": {
+            "type": "string",
+            "description": "Наименование"
+          },
+          "checkListStatus": {
+            "type": "string",
+            "description": "Статус чеклиста",
+            "enum": [
+              "ACTIVE",
+              "ARCHIVE",
+              "NEW"
+            ]
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Дата-время создания записи",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Логин создавшего"
+          },
+          "duplicateFlag": {
+            "type": "boolean",
+            "description": "Возможность дублировать чеклист"
+          },
+          "gosb": {
+            "type": "string",
+            "description": "ГОСБ"
+          },
+          "itemsCount": {
+            "type": "integer",
+            "description": "Количество пунктов в чеклисте",
+            "format": "int32"
+          },
+          "notesFlag": {
+            "type": "boolean",
+            "description": "Возможность писать заметки"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "requestsFlag": {
+            "type": "boolean",
+            "description": "Возможность отправлять обращения"
+          },
+          "terrBankCode": {
+            "type": "string",
+            "description": "Код ТБ"
+          },
+          "updateDate": {
+            "type": "string",
+            "description": "Дата-время обновления записи",
+            "format": "date-time"
+          },
+          "updatedBy": {
+            "type": "string",
+            "description": "Логин обновившего"
+          }
+        },
+        "description": "Модель данных чеклиста"
+      },
+      "CheckListDtoReq": {
+        "title": "CheckListDtoReq",
+        "required": [
+          "checkListName"
+        ],
+        "type": "object",
+        "properties": {
+          "attachmentsFlag": {
+            "type": "boolean",
+            "description": "Возможность добавлять вложения"
+          },
+          "checkListAccessList": {
+            "type": "array",
+            "description": "Привязка ролей к чеклисту",
+            "items": {
+              "$ref": "#/components/schemas/CheckListAccessDtoReq"
+            }
+          },
+          "checkListDescription": {
+            "type": "string",
+            "description": "Описание"
+          },
+          "checkListItems": {
+            "type": "array",
+            "description": "Пункты чеклиста",
+            "items": {
+              "$ref": "#/components/schemas/CheckListItemDtoReq"
+            }
+          },
+          "checkListName": {
+            "type": "string",
+            "description": "Наименование"
+          },
+          "duplicateFlag": {
+            "type": "boolean",
+            "description": "Возможность дублировать чеклист"
+          },
+          "gosb": {
+            "type": "string",
+            "description": "ГОСБ"
+          },
+          "notesFlag": {
+            "type": "boolean",
+            "description": "Возможность писать заметки"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "requestsFlag": {
+            "type": "boolean",
+            "description": "Возможность отправлять обращения"
+          },
+          "terrBankCode": {
+            "type": "string",
+            "description": "Код ТБ"
+          }
+        },
+        "description": "Модель данных чеклиста"
+      },
+      "CheckListDtoRes": {
+        "title": "CheckListDtoRes",
+        "required": [
+          "checkListName"
+        ],
+        "type": "object",
+        "properties": {
+          "attachmentsFlag": {
+            "type": "boolean",
+            "description": "Возможность добавлять вложения"
+          },
+          "checkListAccessList": {
+            "type": "array",
+            "description": "Привязка ролей к чеклисту",
+            "items": {
+              "$ref": "#/components/schemas/CheckListAccessDtoRes"
+            }
+          },
+          "checkListDescription": {
+            "type": "string",
+            "description": "Описание"
+          },
+          "checkListItems": {
+            "type": "array",
+            "description": "Пункты чеклиста",
+            "items": {
+              "$ref": "#/components/schemas/CheckListItemDtoRes"
+            }
+          },
+          "checkListName": {
+            "type": "string",
+            "description": "Наименование"
+          },
+          "checkListStatus": {
+            "type": "string",
+            "description": "Статус чеклиста",
+            "enum": [
+              "ACTIVE",
+              "ARCHIVE",
+              "NEW"
+            ]
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Дата-время создания записи",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Логин создавшего"
+          },
+          "duplicateFlag": {
+            "type": "boolean",
+            "description": "Возможность дублировать чеклист"
+          },
+          "gosb": {
+            "type": "string",
+            "description": "ГОСБ"
+          },
+          "itemsCount": {
+            "type": "integer",
+            "description": "Количество пунктов в чеклисте",
+            "format": "int32"
+          },
+          "notesFlag": {
+            "type": "boolean",
+            "description": "Возможность писать заметки"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "requestsFlag": {
+            "type": "boolean",
+            "description": "Возможность отправлять обращения"
+          },
+          "terrBankCode": {
+            "type": "string",
+            "description": "Код ТБ"
+          },
+          "updateDate": {
+            "type": "string",
+            "description": "Дата-время обновления записи",
+            "format": "date-time"
+          },
+          "updatedBy": {
+            "type": "string",
+            "description": "Логин обновившего"
+          }
+        },
+        "description": "Модель данных чеклиста"
+      },
+      "CheckListFieldDto": {
+        "title": "CheckListFieldDto",
+        "required": [
+          "fieldType"
+        ],
+        "type": "object",
+        "properties": {
+          "checkListFieldValues": {
+            "type": "array",
+            "description": "Список значений к полю",
+            "items": {
+              "$ref": "#/components/schemas/CheckListFieldValuesDto"
+            }
+          },
+          "fieldDescription": {
+            "type": "string",
+            "description": "Описание поля"
+          },
+          "fieldName": {
+            "type": "string",
+            "description": "Наименование поля"
+          },
+          "fieldType": {
+            "type": "string",
+            "description": "Тип поля",
+            "enum": [
+              "BOOLEAN",
+              "DATE",
+              "DATE_TIME",
+              "NUMBER",
+              "SELECT",
+              "TEXT"
+            ]
+          },
+          "internalOrder": {
+            "type": "integer",
+            "description": "Порядок в группе",
+            "format": "int32"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "unitName": {
+            "type": "string",
+            "description": "Наименование единицы измерения"
+          }
+        },
+        "description": "Модель данных поля пункта чеклиста"
+      },
+      "CheckListFieldDtoReq": {
+        "title": "CheckListFieldDtoReq",
+        "required": [
+          "fieldType"
+        ],
+        "type": "object",
+        "properties": {
+          "checkListFieldValues": {
+            "type": "array",
+            "description": "Список значений к полю",
+            "items": {
+              "$ref": "#/components/schemas/CheckListFieldValuesDtoReq"
+            }
+          },
+          "fieldDescription": {
+            "type": "string",
+            "description": "Описание поля"
+          },
+          "fieldName": {
+            "type": "string",
+            "description": "Наименование поля"
+          },
+          "fieldType": {
+            "type": "string",
+            "description": "Тип поля",
+            "enum": [
+              "BOOLEAN",
+              "DATE",
+              "DATE_TIME",
+              "NUMBER",
+              "SELECT",
+              "TEXT"
+            ]
+          },
+          "internalOrder": {
+            "type": "integer",
+            "description": "Порядок в группе",
+            "format": "int32"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "unitName": {
+            "type": "string",
+            "description": "Наименование единицы измерения"
+          }
+        },
+        "description": "Модель данных поля пункта чеклиста"
+      },
+      "CheckListFieldDtoRes": {
+        "title": "CheckListFieldDtoRes",
+        "required": [
+          "fieldType"
+        ],
+        "type": "object",
+        "properties": {
+          "checkListFieldValues": {
+            "type": "array",
+            "description": "Список значений к полю",
+            "items": {
+              "$ref": "#/components/schemas/CheckListFieldValuesDtoRes"
+            }
+          },
+          "fieldDescription": {
+            "type": "string",
+            "description": "Описание поля"
+          },
+          "fieldName": {
+            "type": "string",
+            "description": "Наименование поля"
+          },
+          "fieldType": {
+            "type": "string",
+            "description": "Тип поля",
+            "enum": [
+              "BOOLEAN",
+              "DATE",
+              "DATE_TIME",
+              "NUMBER",
+              "SELECT",
+              "TEXT"
+            ]
+          },
+          "internalOrder": {
+            "type": "integer",
+            "description": "Порядок в группе",
+            "format": "int32"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "unitName": {
+            "type": "string",
+            "description": "Наименование единицы измерения"
+          }
+        },
+        "description": "Модель данных поля пункта чеклиста"
+      },
+      "CheckListFieldValuesDto": {
+        "title": "CheckListFieldValuesDto",
+        "required": [
+          "displayName",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "description": "Отображаемое имя"
+          },
+          "moveToOrder": {
+            "type": "integer",
+            "description": "Позиция для перехода",
+            "format": "int32"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "value": {
+            "type": "integer",
+            "description": "Значение",
+            "format": "int32"
+          }
+        },
+        "description": "Модель данных значений для поля чеклиста"
+      },
+      "CheckListFieldValuesDtoReq": {
+        "title": "CheckListFieldValuesDtoReq",
+        "required": [
+          "displayName",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "description": "Отображаемое имя"
+          },
+          "moveToOrder": {
+            "type": "integer",
+            "description": "Позиция для перехода",
+            "format": "int32"
+          },
+          "value": {
+            "type": "integer",
+            "description": "Значение",
+            "format": "int32"
+          }
+        },
+        "description": "Модель данных значений для поля чеклиста"
+      },
+      "CheckListFieldValuesDtoRes": {
+        "title": "CheckListFieldValuesDtoRes",
+        "required": [
+          "displayName",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "description": "Отображаемое имя"
+          },
+          "moveToOrder": {
+            "type": "integer",
+            "description": "Позиция для перехода",
+            "format": "int32"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "value": {
+            "type": "integer",
+            "description": "Значение",
+            "format": "int32"
+          }
+        },
+        "description": "Модель данных значений для поля чеклиста"
+      },
+      "CheckListGroupDto": {
+        "title": "CheckListGroupDto",
+        "type": "object",
+        "properties": {
+          "groupName": {
+            "type": "string",
+            "description": "Наименование группы"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          }
+        },
+        "description": "Модель данных группы чеклиста"
+      },
+      "CheckListGroupDtoReq": {
+        "title": "CheckListGroupDtoReq",
+        "type": "object",
+        "properties": {
+          "groupName": {
+            "type": "string",
+            "description": "Наименование группы"
+          }
+        },
+        "description": "Модель данных группы чеклиста"
+      },
+      "CheckListGroupDtoRes": {
+        "title": "CheckListGroupDtoRes",
+        "type": "object",
+        "properties": {
+          "groupName": {
+            "type": "string",
+            "description": "Наименование группы"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          }
+        },
+        "description": "Модель данных группы чеклиста"
+      },
+      "CheckListItemDto": {
+        "title": "CheckListItemDto",
+        "required": [
+          "itemName",
+          "itemOrder",
+          "itemType"
+        ],
+        "type": "object",
+        "properties": {
+          "checkListFields": {
+            "type": "array",
+            "description": "Поля чеклиста",
+            "items": {
+              "$ref": "#/components/schemas/CheckListFieldDto"
+            }
+          },
+          "checkListGroup": {
+            "$ref": "#/components/schemas/CheckListGroupDto"
+          },
+          "checkListItems": {
+            "type": "array",
+            "description": "Пункты чеклиста внутри группы",
+            "items": {
+              "$ref": "#/components/schemas/CheckListItemDto"
+            }
+          },
+          "isMandatory": {
+            "type": "boolean",
+            "description": "Обязательность"
+          },
+          "itemName": {
+            "type": "string",
+            "description": "Наименование"
+          },
+          "itemOrder": {
+            "type": "integer",
+            "description": "Сквозной порядковый номер в чеклисте",
+            "format": "int32"
+          },
+          "itemParentOrder": {
+            "type": "integer",
+            "description": "Идентификатор родительской группы",
+            "format": "int32"
+          },
+          "itemType": {
+            "type": "string",
+            "description": "Тип пункта чеклиста",
+            "enum": [
+              "CHECKBOXES_FIELD",
+              "DATE_FIELD",
+              "DATE_TIME_FIELD",
+              "GROUP",
+              "NUMBER_FIELD",
+              "RATING_FIELD",
+              "SELECT_FIELD",
+              "TEXT_FIELD"
+            ]
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          }
+        },
+        "description": "Модель данных пункта чеклиста"
+      },
+      "CheckListItemDtoReq": {
+        "title": "CheckListItemDtoReq",
+        "required": [
+          "itemName",
+          "itemOrder",
+          "itemType"
+        ],
+        "type": "object",
+        "properties": {
+          "checkListFields": {
+            "type": "array",
+            "description": "Поля чеклиста",
+            "items": {
+              "$ref": "#/components/schemas/CheckListFieldDtoReq"
+            }
+          },
+          "checkListGroup": {
+            "$ref": "#/components/schemas/CheckListGroupDtoReq"
+          },
+          "checkListItems": {
+            "type": "array",
+            "description": "Пункты чеклиста внутри группы",
+            "items": {
+              "$ref": "#/components/schemas/CheckListItemDtoReq"
+            }
+          },
+          "isMandatory": {
+            "type": "boolean",
+            "description": "Обязательность"
+          },
+          "itemName": {
+            "type": "string",
+            "description": "Наименование"
+          },
+          "itemOrder": {
+            "type": "integer",
+            "description": "Сквозной порядковый номер в чеклисте",
+            "format": "int32"
+          },
+          "itemType": {
+            "type": "string",
+            "description": "Тип пункта чеклиста",
+            "enum": [
+              "CHECKBOXES_FIELD",
+              "DATE_FIELD",
+              "DATE_TIME_FIELD",
+              "GROUP",
+              "NUMBER_FIELD",
+              "RATING_FIELD",
+              "SELECT_FIELD",
+              "TEXT_FIELD"
+            ]
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          }
+        },
+        "description": "Модель данных пункта чеклиста"
+      },
+      "CheckListItemDtoRes": {
+        "title": "CheckListItemDtoRes",
+        "required": [
+          "itemName",
+          "itemOrder",
+          "itemType"
+        ],
+        "type": "object",
+        "properties": {
+          "checkListFields": {
+            "type": "array",
+            "description": "Поля чеклиста",
+            "items": {
+              "$ref": "#/components/schemas/CheckListFieldDtoRes"
+            }
+          },
+          "checkListGroup": {
+            "$ref": "#/components/schemas/CheckListGroupDtoRes"
+          },
+          "checkListItems": {
+            "type": "array",
+            "description": "Пункты чеклиста внутри группы",
+            "items": {
+              "$ref": "#/components/schemas/CheckListItemDtoRes"
+            }
+          },
+          "isMandatory": {
+            "type": "boolean",
+            "description": "Обязательность"
+          },
+          "itemName": {
+            "type": "string",
+            "description": "Наименование"
+          },
+          "itemOrder": {
+            "type": "integer",
+            "description": "Сквозной порядковый номер в чеклисте",
+            "format": "int32"
+          },
+          "itemParentOrder": {
+            "type": "integer",
+            "description": "Идентификатор родительской группы",
+            "format": "int32"
+          },
+          "itemType": {
+            "type": "string",
+            "description": "Тип пункта чеклиста",
+            "enum": [
+              "CHECKBOXES_FIELD",
+              "DATE_FIELD",
+              "DATE_TIME_FIELD",
+              "GROUP",
+              "NUMBER_FIELD",
+              "RATING_FIELD",
+              "SELECT_FIELD",
+              "TEXT_FIELD"
+            ]
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          }
+        },
+        "description": "Модель данных пункта чеклиста"
+      },
+      "CommunicationDto": {
+        "title": "CommunicationDto",
+        "type": "object",
+        "properties": {
+          "businessId": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "communicationString": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "employeeId": {
+            "type": "string"
+          },
+          "extraCommunicationString": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isFavorite": {
+            "type": "boolean"
+          },
+          "lastChangeDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "xml": {
+          "attribute": false,
+          "wrapped": false
+        }
+      },
+      "EmployeeAssignmentDto": {
+        "title": "EmployeeAssignmentDto",
+        "type": "object",
+        "properties": {
+          "assignmentId": {
+            "type": "string"
+          },
+          "beginDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "businessId": {
+            "type": "string"
+          },
+          "employee": {
+            "$ref": "#/components/schemas/EmployeeDto"
+          },
+          "employeeId": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "id": {
+            "type": "string"
+          },
+          "lastChangeDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "staffUnit": {
+            "$ref": "#/components/schemas/StaffUnitDto"
+          },
+          "staffUnitId": {
+            "type": "string"
+          }
+        },
+        "xml": {
+          "attribute": false,
+          "wrapped": false
+        }
+      },
+      "EmployeeDto": {
+        "title": "EmployeeDto",
+        "type": "object",
+        "properties": {
+          "birthday": {
+            "type": "string",
+            "format": "date"
+          },
+          "businessId": {
+            "type": "string"
+          },
+          "employeeId": {
+            "type": "string"
+          },
+          "fired": {
+            "type": "string",
+            "format": "date"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "F",
+              "M"
+            ]
+          },
+          "hired": {
+            "type": "string",
+            "format": "date"
+          },
+          "id": {
+            "type": "string"
+          },
+          "isStudent": {
+            "type": "boolean"
+          },
+          "lastChangeDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "middleName": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "personalNumber": {
+            "type": "string"
+          },
+          "timeZone": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ucpId": {
+            "type": "string"
+          }
+        },
+        "xml": {
+          "attribute": false,
+          "wrapped": false
+        }
+      },
+      "EmployeeProfileDto": {
+        "title": "EmployeeProfileDto",
+        "type": "object",
+        "properties": {
+          "communications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommunicationDto"
+            }
+          },
+          "employee": {
+            "$ref": "#/components/schemas/EmployeeDto"
+          },
+          "position": {
+            "$ref": "#/components/schemas/PositionDto"
+          },
+          "subdivision": {
+            "$ref": "#/components/schemas/SubdivisionDto"
+          },
+          "workingTime": {
+            "$ref": "#/components/schemas/WorkingTimeDto"
+          },
+          "workingTimeAccountingKind": {
+            "$ref": "#/components/schemas/WorkingTimeAccountingKindDto"
+          }
+        },
+        "xml": {
+          "attribute": false,
+          "wrapped": false
+        }
+      },
+      "Error": {
+        "title": "Error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "EventContentDto": {
+        "title": "EventContentDto",
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "description": "ИД события"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "rootEntityId": {
+            "type": "string",
+            "description": "ID корневого агрегата"
+          },
+          "taskInstructions": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "Содержание"
+          },
+          "taskTemplate": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "description": "Шаблон"
+          },
+          "taskTitle": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "description": "Оглавление"
+          }
+        },
+        "description": "Модель данных содержания события"
+      },
+      "EventHistoryDto": {
+        "title": "EventHistoryDto",
+        "type": "object",
+        "properties": {
+          "changeDate": {
+            "type": "string",
+            "description": "Дата записи",
+            "format": "date-time"
+          },
+          "changeDesc": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string",
+            "description": "Описание изменения"
+          },
+          "eventId": {
+            "type": "string",
+            "description": "ИД события"
+          },
+          "fieldName": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "Наименования поля"
+          },
+          "newValue": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string",
+            "description": "Новое Значение"
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Идентификатор сущности"
+          },
+          "oldValue": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string",
+            "description": "Старое значение"
+          },
+          "rootEntityId": {
+            "type": "string",
+            "description": "ID корневого агрегата"
+          }
+        },
+        "description": "Модель данных истории служебных задач"
+      },
+      "JsonRpcError«ResultError»": {
+        "title": "JsonRpcError«ResultError»",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ResultError"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "JsonRpcResponse«List«CommunicationDto»,ResultError»": {
+        "title": "JsonRpcResponse«List«CommunicationDto»,ResultError»",
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/JsonRpcError«ResultError»"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommunicationDto"
+            }
+          }
+        }
+      },
+      "JsonRpcResponse«List«EmployeeAssignmentDto»,ResultError»": {
+        "title": "JsonRpcResponse«List«EmployeeAssignmentDto»,ResultError»",
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/JsonRpcError«ResultError»"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmployeeAssignmentDto"
+            }
+          }
+        }
+      },
+      "JsonRpcResponse«List«EmployeeProfileDto»,ResultError»": {
+        "title": "JsonRpcResponse«List«EmployeeProfileDto»,ResultError»",
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/JsonRpcError«ResultError»"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmployeeProfileDto"
+            }
+          }
+        }
+      },
+      "JsonRpcResponse«PositionDto,ResultError»": {
+        "title": "JsonRpcResponse«PositionDto,ResultError»",
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/JsonRpcError«ResultError»"
+          },
+          "result": {
+            "$ref": "#/components/schemas/PositionDto"
+          }
+        }
+      },
+      "JsonRpcResponse«SubdivisionDto,ResultError»": {
+        "title": "JsonRpcResponse«SubdivisionDto,ResultError»",
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/JsonRpcError«ResultError»"
+          },
+          "result": {
+            "$ref": "#/components/schemas/SubdivisionDto"
+          }
+        }
+      },
+      "LinkContractDto": {
+        "title": "LinkContractDto",
+        "type": "object",
+        "properties": {
+          "oeObjId": {
+            "type": "string"
+          },
+          "onObjId": {
+            "type": "string"
+          },
+          "possDateFrom": {
+            "type": "string",
+            "format": "date"
+          },
+          "possDateTo": {
+            "type": "string",
+            "format": "date"
+          },
+          "validFrom": {
+            "type": "string",
+            "format": "date"
+          },
+          "validTo": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "description": "Данные адреса"
+      },
+      "OperationAssignDto": {
+        "title": "OperationAssignDto",
+        "type": "object",
+        "properties": {
+          "contractId": {
+            "type": "string",
+            "description": "Идентификатор договора"
+          },
+          "equipmentId": {
+            "type": "string",
+            "description": "Идентификатор оборудования"
+          },
+          "objType": {
+            "type": "integer",
+            "description": "Тип связия",
+            "format": "int32"
+          },
+          "oeObjId": {
+            "type": "string",
+            "description": "Идентификатор объекта эксплуатации"
+          },
+          "validFrom": {
+            "type": "string",
+            "description": "Действует с",
+            "format": "date"
+          },
+          "validTo": {
+            "type": "string",
+            "description": "Действует по",
+            "format": "date"
+          }
+        },
+        "description": "Присвоение объекта"
+      },
+      "OperationAvailiableDto": {
+        "title": "OperationAvailiableDto",
+        "type": "object",
+        "properties": {
+          "endTime": {
+            "type": "string",
+            "description": "Время работы по"
+          },
+          "numDay": {
+            "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+            "type": "string",
+            "description": "День недели",
+            "format": "byte"
+          },
+          "numWeek": {
+            "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+            "type": "string",
+            "description": "Номер недели",
+            "format": "byte"
+          },
+          "oeObjId": {
+            "type": "string",
+            "description": " Идентификатор объекта эксплуатации"
+          },
+          "scheduleId": {
+            "type": "string",
+            "description": " Идентификатор график"
+          },
+          "startTime": {
+            "type": "string",
+            "description": "Время работы с"
+          }
+        },
+        "description": "DTO  - График доступности"
+      },
+      "OperationCategoryDto": {
+        "title": "OperationCategoryDto",
+        "type": "object",
+        "properties": {
+          "nameCategory": {
+            "type": "string",
+            "description": "Категория"
+          },
+          "oeObjId": {
+            "type": "string",
+            "description": "Номер объекта"
+          },
+          "validFrom": {
+            "type": "string",
+            "description": "Действует с",
+            "format": "date"
+          },
+          "validTo": {
+            "type": "string",
+            "description": "Действует по",
+            "format": "date"
+          }
+        },
+        "description": "Категория эксплуатации"
+      },
+      "OperationContractDto": {
+        "title": "OperationContractDto",
+        "type": "object",
+        "properties": {
+          "asunStatus": {
+            "type": "string",
+            "description": "Статус АСУН"
+          },
+          "contractId": {
+            "type": "string",
+            "description": "Идентификатор договора"
+          },
+          "contractNumberAsun": {
+            "type": "string",
+            "description": "Номер договора АСУН"
+          },
+          "contractNumberUvhd": {
+            "type": "string",
+            "description": "Номер договора УВХД"
+          },
+          "contractTermFinish": {
+            "type": "string",
+            "description": "Срок договора (дата по)",
+            "format": "date"
+          },
+          "contractTermStart": {
+            "type": "string",
+            "description": "Срок договора (дата с)",
+            "format": "date"
+          },
+          "contractType": {
+            "type": "string",
+            "description": "Вид договора"
+          },
+          "contragentName": {
+            "type": "string",
+            "description": "Контрагент"
+          }
+        },
+        "description": "Оборудование"
+      },
+      "OperationEquipmentDto": {
+        "title": "OperationEquipmentDto",
+        "type": "object",
+        "properties": {
+          "cabAreaElevator": {
+            "type": "number",
+            "description": "Площадь кабины лифта, М2"
+          },
+          "conditionEquipment": {
+            "type": "string",
+            "description": "Состояние"
+          },
+          "costPurchase": {
+            "type": "number",
+            "description": "Стоимость закупки"
+          },
+          "costTechService": {
+            "type": "number",
+            "description": "Стоимость ТО, руб."
+          },
+          "countTechService": {
+            "type": "integer",
+            "description": "Количество ТО в год",
+            "format": "int32"
+          },
+          "equipmentId": {
+            "type": "string",
+            "description": "Идентификатор оборудования"
+          },
+          "equipmentName": {
+            "type": "string",
+            "description": "Оборудование"
+          },
+          "equipmentType": {
+            "type": "string",
+            "description": "Тип оборудования"
+          },
+          "factoryNumberEquipment": {
+            "type": "string",
+            "description": "Заводской номер"
+          },
+          "fuelConsumption": {
+            "type": "number",
+            "description": "Удельный расход топлива, КВЧ"
+          },
+          "guaranteeEndDate": {
+            "type": "string",
+            "description": "Дата окончания гарантии",
+            "format": "date"
+          },
+          "inventoryNumber": {
+            "type": "string",
+            "description": "Инвентарный номер"
+          },
+          "kindTechService": {
+            "type": "string",
+            "description": "Вид ТО"
+          },
+          "lastTechService": {
+            "type": "string",
+            "description": "Дата последнего ТО",
+            "format": "date"
+          },
+          "loadCapacity": {
+            "type": "number",
+            "description": "Грузоподъемность, КГ"
+          },
+          "maxNumPassengers": {
+            "type": "integer",
+            "description": "Максимальное число пассажиров, ШТ",
+            "format": "int32"
+          },
+          "modelEquipment": {
+            "type": "string",
+            "description": "Марка/модель"
+          },
+          "montageDate": {
+            "type": "string",
+            "description": "Дата монтажа",
+            "format": "date"
+          },
+          "nominalPower": {
+            "type": "number",
+            "description": "Номинальная мощность"
+          },
+          "offTimeOutputVoltage": {
+            "type": "number",
+            "description": "Время автономной работы, при номинальной мощности"
+          },
+          "operationEquipmentDate": {
+            "type": "string",
+            "description": "Дата ввода в эксплуатацию",
+            "format": "date"
+          },
+          "outputVoltage": {
+            "type": "number",
+            "description": "Выходное напряжение, В"
+          },
+          "producerEquipment": {
+            "type": "string",
+            "description": "Изготовитель"
+          },
+          "purchaseDate": {
+            "type": "string",
+            "description": "Дата закупки",
+            "format": "date"
+          },
+          "statusEquipment": {
+            "type": "string",
+            "description": "Статус"
+          },
+          "sysUnitEquipment": {
+            "type": "string",
+            "description": "Системная единица оборудования"
+          },
+          "unitBalance": {
+            "type": "string",
+            "description": "Балансовая единица"
+          },
+          "volumeFuel": {
+            "type": "number",
+            "description": "Объем топливного бака, М3"
+          },
+          "volumeSq": {
+            "type": "number",
+            "description": "Объем, М3"
+          }
+        },
+        "description": "Оборудование"
+      },
+      "OperationLimitDto": {
+        "title": "OperationLimitDto",
+        "type": "object",
+        "properties": {
+          "limitResource": {
+            "type": "string"
+          },
+          "onObjId": {
+            "type": "string"
+          }
+        },
+        "description": "Данные о лимите"
+      },
+      "OperationObjectDto": {
+        "title": "OperationObjectDto",
+        "type": "object",
+        "properties": {
+          "countryName": {
+            "type": "string",
+            "description": "Страна"
+          },
+          "houseNumber": {
+            "type": "string",
+            "description": "Дом/Корп/Стр"
+          },
+          "linkContract": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkContractDto"
+            }
+          },
+          "locationName": {
+            "type": "string",
+            "description": "Город/Населенный пункт"
+          },
+          "nearArea": {
+            "type": "string",
+            "description": "Площадь прилегающей территории"
+          },
+          "numFlat": {
+            "type": "string",
+            "description": "Номер"
+          },
+          "numFloor": {
+            "type": "string",
+            "description": "Этаж"
+          },
+          "objName": {
+            "type": "string",
+            "description": "Наименование объекта недвижимости"
+          },
+          "objType": {
+            "type": "string",
+            "description": "Тип объекта"
+          },
+          "oeObjId": {
+            "type": "string",
+            "description": "Идентификатор объекта эксплуатации"
+          },
+          "operationAssigment": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OperationAssignDto"
+            }
+          },
+          "operationAvailible": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OperationAvailiableDto"
+            }
+          },
+          "operationCategory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OperationCategoryDto"
+            }
+          },
+          "operationContract": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OperationContractDto"
+            }
+          },
+          "operationEquipment": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OperationEquipmentDto"
+            }
+          },
+          "operationLimit": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OperationLimitDto"
+            }
+          },
+          "operationPurpose": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OperationPurposeDto"
+            }
+          },
+          "operationWinterSummer": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OperationWinterSummerDto"
+            }
+          },
+          "parentId": {
+            "type": "string",
+            "description": "Идентификатор родительского объекта эксплуатации."
+          },
+          "regionName": {
+            "type": "string",
+            "description": "Регион"
+          },
+          "streetName": {
+            "type": "string",
+            "description": "Улица"
+          },
+          "totalArea": {
+            "type": "string",
+            "description": "Площадь общая (кв.м.)"
+          },
+          "validFrom": {
+            "type": "string",
+            "description": "Действует с",
+            "format": "date"
+          },
+          "validTo": {
+            "type": "string",
+            "description": "Действует по",
+            "format": "date"
+          },
+          "vspNumber": {
+            "type": "string",
+            "description": "Номер ВСП"
+          },
+          "zsoArea": {
+            "type": "string",
+            "description": "Площадь ЗСО (зона самообслуживани я 24 ч)"
+          }
+        },
+        "description": "Объект Эксплуатации"
+      },
+      "OperationPurposeDto": {
+        "title": "OperationPurposeDto",
+        "type": "object",
+        "properties": {
+          "endPurposeDate": {
+            "type": "string",
+            "description": "Действует по",
+            "format": "date"
+          },
+          "oeObjId": {
+            "type": "string",
+            "description": "Идентификатор объекта эксплуатации"
+          },
+          "purposeArea": {
+            "type": "string",
+            "description": "Площадь (кв.м.)"
+          },
+          "purposeCode": {
+            "maxLength": 3,
+            "minLength": 0,
+            "type": "string",
+            "description": "Назначение"
+          },
+          "startPurposeDate": {
+            "type": "string",
+            "description": "Действует с",
+            "format": "date"
+          }
+        },
+        "description": "Назначение"
+      },
+      "OperationWinterSummerDto": {
+        "title": "OperationWinterSummerDto",
+        "type": "object",
+        "properties": {
+          "endSeason": {
+            "type": "string",
+            "format": "date"
+          },
+          "endSummer": {
+            "type": "string"
+          },
+          "endWinter": {
+            "type": "string"
+          },
+          "oeObjId": {
+            "type": "string"
+          },
+          "startSeason": {
+            "type": "string",
+            "format": "date"
+          },
+          "startSummer": {
+            "type": "string"
+          },
+          "startWinter": {
+            "type": "string"
+          }
+        },
+        "description": "Признак «Зима-Лето»"
+      },
+      "Pageable": {
+        "title": "Pageable",
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "paged": {
+            "type": "boolean"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/Sort"
+          },
+          "unpaged": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Page«CheckEventDto»": {
+        "title": "Page«CheckEventDto»",
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckEventDtoRes"
+            }
+          },
+          "empty": {
+            "type": "boolean"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/Pageable"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/Sort"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Page«CheckListDto»": {
+        "title": "Page«CheckListDto»",
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckListDtoRes"
+            }
+          },
+          "empty": {
+            "type": "boolean"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/Pageable"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/Sort"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Page«EventHistoryDto»": {
+        "title": "Page«EventHistoryDto»",
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EventHistoryDto"
+            }
+          },
+          "empty": {
+            "type": "boolean"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/Pageable"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/Sort"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PositionDto": {
+        "title": "PositionDto",
+        "type": "object",
+        "properties": {
+          "beginDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "businessId": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "externalCode": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "lastChangeDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string"
+          },
+          "organizationBusinessId": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "positionId": {
+            "type": "string"
+          },
+          "shortName": {
+            "type": "string"
+          }
+        },
+        "xml": {
+          "attribute": false,
+          "wrapped": false
+        }
+      },
+      "ResultError": {
+        "title": "ResultError",
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "SearchEmployeeParams": {
+        "title": "SearchEmployeeParams",
+        "type": "object",
+        "properties": {
+          "divisionName": {
+            "type": "string"
+          },
+          "firedDate": {
+            "type": "string",
+            "example": "dd/MM/yyyy"
+          },
+          "leaderName": {
+            "type": "string"
+          },
+          "leaderNumber": {
+            "type": "string"
+          },
+          "mailName": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "positionName": {
+            "type": "string"
+          },
+          "wrkFirstName": {
+            "type": "string"
+          },
+          "wrkLastName": {
+            "type": "string"
+          },
+          "wrkMiddleName": {
+            "type": "string"
+          },
+          "wrkNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "Sort": {
+        "title": "Sort",
+        "type": "object",
+        "properties": {
+          "empty": {
+            "type": "boolean"
+          },
+          "sorted": {
+            "type": "boolean"
+          },
+          "unsorted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "StaffUnitDto": {
+        "title": "StaffUnitDto",
+        "type": "object",
+        "properties": {
+          "beginDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "businessId": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "id": {
+            "type": "string"
+          },
+          "lastChangeDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "positionId": {
+            "type": "string"
+          },
+          "staffUnitId": {
+            "type": "string"
+          },
+          "subdivisionId": {
+            "type": "string"
+          }
+        },
+        "xml": {
+          "attribute": false,
+          "wrapped": false
+        }
+      },
+      "SubdivisionDto": {
+        "title": "SubdivisionDto",
+        "type": "object",
+        "properties": {
+          "beginDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "businessId": {
+            "type": "string"
+          },
+          "chiefEmployeeId": {
+            "type": "string"
+          },
+          "chiefPersonalNumber": {
+            "type": "string"
+          },
+          "childSubdivisionsIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "departmentsIdMdmp": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "externalCode": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "isAbolished": {
+            "type": "boolean"
+          },
+          "lastChangeDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "location": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "parentSubdivisionsIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "shortName": {
+            "type": "string"
+          },
+          "subdivisionFullPath": {
+            "type": "string"
+          },
+          "subdivisionId": {
+            "type": "string"
+          },
+          "subdivisionUnits": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubdivisionUnit"
+            }
+          }
+        },
+        "xml": {
+          "attribute": false,
+          "wrapped": false
+        }
+      },
+      "SubdivisionUnit": {
+        "title": "SubdivisionUnit",
+        "type": "object",
+        "properties": {
+          "employeeId": {
+            "type": "string"
+          },
+          "isChief": {
+            "type": "boolean"
+          },
+          "positionId": {
+            "type": "string"
+          }
+        },
+        "xml": {
+          "attribute": false,
+          "wrapped": false
+        }
+      },
+      "WorkingTimeAccountingKindDto": {
+        "title": "WorkingTimeAccountingKindDto",
+        "type": "object",
+        "properties": {
+          "beginDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "businessId": {
+            "type": "string"
+          },
+          "employeeId": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "lastChangeDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "normalizedIndicator": {
+            "type": "string"
+          }
+        },
+        "xml": {
+          "attribute": false,
+          "wrapped": false
+        }
+      },
+      "WorkingTimeDto": {
+        "title": "WorkingTimeDto",
+        "type": "object",
+        "properties": {
+          "beginDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "businessId": {
+            "type": "string"
+          },
+          "employeeId": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "lastChangeDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "normalizedIndicator": {
+            "type": "string"
+          }
+        },
+        "xml": {
+          "attribute": false,
+          "wrapped": false
+        }
+      },
+      "Модель короткой информации по вложениям": {
+        "title": "Модель короткой информации по вложениям",
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string"
+          },
+          "filetype": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "SberPDI Header": {
+        "type": "apiKey",
+        "name": "SberPDI",
+        "in": "header"
+      }
+    }
+  }
+}
